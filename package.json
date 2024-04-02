@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-native-masked-view/masked-view": "^0.3.1",
+    "@react-native-picker/picker": "^2.7.2",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "expo": "~50.0.13",

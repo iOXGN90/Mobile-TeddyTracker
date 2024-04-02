@@ -1,8 +1,43 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform, StatusBar } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform, 
+        StatusBar, Modal, TextInput, ScrollView, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // Import Ionicons from react-native-vector-icons
+import {Picker} from '@react-native-picker/picker';
+
+import Tasks from '../../component/Tasks';
 
 const TeddyTracker = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [subject, setSubject] = useState();
+  const [typeOfActivity, setTypeOfActivity] = useState('Assignment');
+  const [description, setDescription] = useState('');
+  // const [description, setDescription] = useState('');
+
+  const [trackerData, setTrackerData] = useState([]);
+
+  const cancelButton = () =>{
+    setModalVisible(!modalVisible);
+    setSubject('');
+    setDescription('');
+  }
+
+  const displaySample = () => {
+    // console.log(subject)
+        console.log(typeOfActivity);
+        const itemsToAdd = {
+          subject: subject,
+          description: description,
+          typeOfActivity: typeOfActivity
+        };
+        setTrackerData(prevTrackerData => [...prevTrackerData, itemsToAdd]);
+        console.log(JSON.stringify(trackerData));
+        setModalVisible(!modalVisible);
+        setDescription('');
+        setSubject('');
+    };
+
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -12,26 +47,108 @@ const TeddyTracker = () => {
       </View>
       <View style={styles.headerCenter}>
         <Text style={styles.headerTitle}>All Task</Text>
-        <TouchableOpacity onPress={() => console.log('Add Task pressed')} style={styles.plusButton}>
+        <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
           <Text style={styles.plusIcon}>
             <Icon name="add-circle-outline" size={36} color="rgba(0,0,0,0.22)" /> {/* Use Ionicons with the desired name */}
           </Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.tasks}>
-        <View style={styles.task}>
-          <View style={styles.taskDetails}>
-            <View style={styles.taskRectangle}>
-              <Text style={styles.taskTitle}>Task Title</Text>
-              <Text style={styles.taskDescription}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</Text>
-              <TouchableOpacity onPress={() => console.log('Options pressed')}>
-                <Text style={styles.taskMenu}>&#8942;</Text>
-              </TouchableOpacity>
+        <Modal
+          style={styles.modalView}
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.Header}>
+                Subject
+              </Text>
+              <TextInput
+                style={styles.inputTitle}
+                onChangeText={setSubject}
+                value={subject}
+                placeholder="Enter text here"
+                keyboardType="default" // You can change this to specify the keyboard type (e.g., 'numeric', 'email-address')
+              />
+
+              <Text style={styles.Header}>
+                Type of Activity:
+              </Text>
+                <Picker
+                  selectedValue={typeOfActivity}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setTypeOfActivity(itemValue)
+                  }
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    backgroundColor: 'skyblue',
+                  }}
+                >
+                  <Picker.Item label="Assignment" value="Assignment" />
+                  <Picker.Item label="Activity" value="Activity" />
+                </Picker>
+
+              <Text style={styles.Header}>
+                Description:
+              </Text>
+              <TextInput
+                style={styles.inputDescription}
+                onChangeText={setDescription}
+                textAlignVertical='top'
+                multiline={true}
+                numberOfLines={10}
+                value={description}
+                placeholder="Enter text here"
+                keyboardType="default" // You can change this to specify the keyboard type (e.g., 'numeric', 'email-address')
+              />
+
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={displaySample}
+                >
+                  <Text style={{
+                    fontSize: 20,
+                    fontWeight: 'bold'
+                  }}>
+                    Submit
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={cancelButton}
+                >
+                  <Text style={{
+                    fontSize: 20,
+                    fontWeight: 'bold'
+                  }}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
             </View>
           </View>
-        </View>
-        {/* More tasks can be added here */}
+      </Modal>
       </View>
+      <ScrollView>
+        <View style={{
+          marginVertical:30,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+        }}>
+          {trackerData.map((item, index)=>(
+            <View style={styles.item} key={index}>
+              <Tasks
+                trackerData={item}
+              />
+            </View>
+          ))}
+        </View>
+      </ScrollView>
       <View style={styles.solidLine} />
       <View style={styles.legend}>
         <View style={styles.legendSquare}></View>
@@ -83,43 +200,7 @@ const styles = StyleSheet.create({
   plusIcon: {
     marginTop: 15, // Add margin top to the plus icon
   },
-  tasks: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  task: {
-    marginBottom: 20,
-  },
-  taskDetails: {
-    backgroundColor: 'white', // Set background color to white
-    borderRadius: 20, // Border radius to create rounded edges
-    borderRightWidth: 1, // Add border
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderRightColor: '#ccc', // Border color
-    borderTopColor: '#ccc',
-    borderBottomColor: '#ccc',
-    padding: 20,
-    marginTop: 15,
-    borderLeftWidth: 10,
-    borderLeftColor: '#00A3FF',
-    
-  },
-  taskRectangle: {
-    flexDirection: 'column',
-  },
-  taskTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  taskDescription: {
-    fontSize: 18,
-  },
-  taskMenu: {
-    fontSize: 24,
-    alignSelf: 'flex-end',
-    marginTop: 'auto',
-  },
+  
   solidLine: {
     borderTopWidth: 1,
     borderColor: 'black',
@@ -143,6 +224,46 @@ const styles = StyleSheet.create({
   legendText: {
     fontSize: 20,
   },
+
+  centeredView:{
+    flex: 1,
+    display: 'flex',
+    backgroundColor: 'white',
+  },
+
+  modalView: {
+    borderRadius: 10,
+    padding: 15,
+  },
+
+  inputTitle:{
+    // borderWidth: 0.5,
+    borderRadius: 20,
+    fontSize: 18
+  },
+
+  inputDescription:{
+    padding: 10,
+    borderWidth: 0.5,
+    borderRadius: 20,
+    fontSize: 18
+  },
+
+  closeButton: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: 'lightgrey',
+    borderRadius: 5,
+    alignItems: 'center',
+    padding: 20,
+    
+  }, 
+  Header:{
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 20
+  },
+
 });
 
 export default TeddyTracker;
