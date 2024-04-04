@@ -33,41 +33,30 @@ const Tasks = ({trackerData}) => {
 };
 
 const styles = StyleSheet.create({
-    
-      taskDetails: {
-        display: 'flex',
-        justifyContent: 'center',
-        // alignItems: 'center',
-        backgroundColor: 'white', // Set background color to white
-        borderRadius: 15, // Border radius to create rounded edges
-        borderRightWidth: 1, // Add border
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        borderRightColor: '#ccc', // Border color
-        borderTopColor: '#ccc',
-        borderBottomColor: '#ccc',
-        padding: 20,
-        marginTop: 25,
-        borderLeftWidth: 10,
-        borderLeftColor: '#00A3FF',
-        elevation: 10,
-        width: 400
-        
-      },
-      taskRectangle: {
-        flexDirection: 'column',
-      },
-      taskTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-      },
-      taskDescription: {
-        fontSize: 18,
-      },
-      taskMenu: {
-        fontSize: 24,
-        alignSelf: 'flex-end',
-        marginTop: 'auto',
+  taskDetails: {
+    backgroundColor: 'white',
+    borderRadius: 15,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderRightColor: '#ccc',
+    borderTopColor: '#ccc',
+    borderBottomColor: '#ccc',
+    padding: 20,
+    marginTop: 25,
+    borderLeftWidth: 10,
+    borderLeftColor: '#00A3FF',
+    elevation: 10,
+    width: '90%', // Adjust width to 90% of parent container
+    alignSelf: 'center', // Center horizontally
+    marginHorizontal: 'auto', // Add margin on the sides
+  },
+  taskTitle: {
+    fontSize: 20,
+    fontWeight: 'bold', // Apply bold font weight
+  },
+  taskDescription: {
+    fontSize: 18,
       },
 })
 
