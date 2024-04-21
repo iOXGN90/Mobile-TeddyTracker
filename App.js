@@ -1,27 +1,30 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import AllTasks from './screens/tasks/AllTasks';
 import Finished from './screens/tasks/Finished';
 import InProgress from './screens/tasks/InProgress';
+import CustomDrawerContent from './CustomDrawerContent'; // Import the custom drawer content component
 
+const Drawer = createDrawerNavigator();
 
-const Stack = createNativeStackNavigator();
-
-export default function App() {
-return (
+const App = () => {
+  return (
     <NavigationContainer>
-        <Stack.Navigator
-            initialRouteName="AllTasks"
-            screenOptions={{
-                headerShown: false,
-                animation: 'slide_from_right', // Set the animation option
-            }}
-        >
-            <Stack.Screen name="AllTasks" component={AllTasks}/>
-            <Stack.Screen name="InProgress" component={InProgress}/>
-            <Stack.Screen name="Finished" component={Finished}/>
-        </Stack.Navigator>
+      <Drawer.Navigator
+        initialRouteName="AllTasks"
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
+        drawerStyle={{ backgroundColor: '#E9EDC9' }} // Set drawer background color
+      >
+        {/* Define Screens */}
+        <Drawer.Screen name="AllTasks" component={AllTasks} />
+        <Drawer.Screen name="InProgress" component={InProgress} />
+        <Drawer.Screen name="Finished" component={Finished} />
+        {/* Add more screens to the drawer here if needed */}
+      </Drawer.Navigator>
     </NavigationContainer>
-    );
+  );
 };
+
+export default App;

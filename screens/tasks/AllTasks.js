@@ -1,18 +1,14 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform, 
-        StatusBar, Modal, TextInput, ScrollView, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; // Import Ionicons from react-native-vector-icons
-import {Picker} from '@react-native-picker/picker';
-
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform, StatusBar, Modal, TextInput, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Picker } from '@react-native-picker/picker';
 import Tasks from '../../component/Tasks';
 
 const TeddyTracker = () => {
   const [modalVisible, setModalVisible] = useState(false);
-
   const [subject, setSubject] = useState('');
   const [typeOfActivity, setTypeOfActivity] = useState('Assignment');
   const [description, setDescription] = useState('');
-
   const [trackerData, setTrackerData] = useState([]);
 
   const cancelButton = () =>{
@@ -35,17 +31,10 @@ const TeddyTracker = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Menu pressed')}>
-          <Text style={styles.menuIcon}>&#9776;</Text>
-        </TouchableOpacity>
-      </View>
       <View style={styles.headerCenter}>
-        <Text style={styles.headerTitle}>All Task</Text>
+      <Text style={styles.headerTitle}>TeddyTracker</Text>
         <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
-          <Text style={styles.plusIcon}>
-            <Icon name="add-circle-outline" size={36} color="rgba(0,0,0,0.22)" />
-          </Text>
+          <Icon name="add-circle-outline" size={40} color="rgba(0,0,0,0.22)" />
         </TouchableOpacity>
         <Modal
           animationType="slide"
@@ -117,41 +106,24 @@ const TeddyTracker = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#FEFAE0',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: '#E9EDC9',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-  },
-  menuIcon: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    shadowColor: 'rgba(0, 0, 0, 0.4)',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 1,
-    shadowRadius: 2,
-    elevation: 3,
   },
   headerCenter: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end', // Aligns the plus button to the right
     alignItems: 'center',
     paddingHorizontal: 20,
   },
   headerTitle: {
     fontSize: 24,
-    marginTop: 15,
+    marginTop: -20,
+    marginRight: 150,
   },
   plusButton: {
-    marginLeft: 10,
-  },
-  plusIcon: {
-    marginTop: 15,
+    marginRight: -10, // Moved to the right side
+    marginTop: -20,
+
   },
   solidLine: {
     borderTopWidth: 1,
