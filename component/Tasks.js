@@ -13,7 +13,7 @@ const Tasks = ({ trackerData, handleInProgress, handleFinished }) => {
   return (
     <TouchableOpacity style={[styles.taskDetails, { width: windowWidth * 0.9, marginBottom: 30 }]} onPress={handlePressSample}>
       <View style={styles.taskRectangle}>
-        <Text style={styles.taskTitle}>Subject:</Text>
+        <Text style={styles.taskTitle}>Section:</Text>
         <Text style={styles.taskDescription}>{trackerData.subject}</Text>
         <Text style={styles.taskTitle}>Type of Activity:</Text>
         <Text style={styles.taskDescription}>{trackerData.typeOfActivity}</Text>
