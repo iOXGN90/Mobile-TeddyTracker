@@ -9,6 +9,7 @@ const SectionGuestComponent = ({sectionInfo}) => {
   
     const handlePressSample = () => {
       console.log("Section ID: " + sectionInfo.section_id);
+      Navigation.navigate('AdminTasks', {sectionInfo : sectionInfo})
     };
   
     return (
@@ -34,7 +35,7 @@ const SectionGuestComponent = ({sectionInfo}) => {
         flex: 1
       },
       sectionContainer: {
-        marginVertical: 15,
+        // marginVertical: 15,
         width: "90%",
         backgroundColor: 'white',
         borderRadius: 15,
@@ -46,7 +47,7 @@ const SectionGuestComponent = ({sectionInfo}) => {
       },
       sectionName: {
         marginHorizontal: 10,
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: 'bold',
       },
       sectionDescription: {

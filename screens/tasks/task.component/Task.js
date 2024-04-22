@@ -2,8 +2,8 @@ import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const Tasks = ({ taskData }) => {
-  const Navigation = useNavigation();
+const Tasks = ({taskData}) => {
+  const navigation = useNavigation();
   const windowWidth = Dimensions.get('window').width;
 
   const handlePressSample = () => {
@@ -13,20 +13,12 @@ const Tasks = ({ taskData }) => {
   return (
     <TouchableOpacity style={[styles.taskDetails, { width: windowWidth * 0.9, marginBottom: 30 }]} onPress={handlePressSample}>
       <View style={styles.taskRectangle}>
-        <Text style={styles.taskTitle}>Section:</Text>
+        <Text style={styles.taskTitle}>Subject:</Text>
         <Text style={styles.taskDescription}>{taskData.subject}</Text>
         <Text style={styles.taskTitle}>Type of Activity:</Text>
-        <Text style={styles.taskDescription}>{taskData.typeOfActivity}</Text>
-        {/* New section for Status */}
+        <Text style={styles.taskDescription}>{taskData.type_of_task}</Text>
         <Text style={styles.taskTitle}>Status:</Text>
-        <View style={styles.statusContainer}>
-          <TouchableOpacity style={styles.statusButtonInProgress} onPress={handleInProgress}>
-            <Text style={styles.statusButtonText}>In Progress</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.statusButton, styles.finishedButton]} onPress={handleFinished}>
-            <Text style={[styles.statusButtonText, styles.finishedText]}>Finished</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.taskDescription}>{taskData.status}</Text>
       </View>
     </TouchableOpacity>
   );

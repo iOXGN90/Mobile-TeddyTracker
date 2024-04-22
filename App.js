@@ -1,47 +1,51 @@
 import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
 import AllTasks from './screens/tasks/AllTasks';
 import Finished from './screens/tasks/Finished';
 import InProgress from './screens/tasks/InProgress';
-import CustomDrawerContent from './CustomDrawerContent'; // Import the custom drawer content component
+// import CustomDrawerContent from './CustomDrawerContent'; // Import the custom drawer content component
 
 import Landing from './screens/landing/Landing';
 import Guest from './screens/landing/Guest';
-import Admin from './screens/landing/Landing';
+import Admin from './screens/landing/Admin';
 import SectionGuest from './screens/sections/SectionGuest';
 import SectionAdmin from './screens/sections/SectionAdmin';
 
+import AdminTasks from './screens/tasks/AdminTasks';
 
-const Drawer = createDrawerNavigator();
+
+const Stack = createNativeStackNavigator();
+
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator
+      <Stack.Navigator
         initialRouteName="Landing"
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
-        drawerStyle={{ backgroundColor: '#E9EDC9' }} // Set drawer background color
         screenOptions={{
           headerShown: false,
           animation: 'slide_from_right'
         }}
       >
         {/* Define Screens */}
-        <Drawer.Screen name="Landing" component={Landing}/>
-        <Drawer.Screen name="Guest" component={Guest}/>
+        <Stack.Screen name="Landing" component={Landing}/>
+        <Stack.Screen name="Guest" component={Guest}/>
+        <Stack.Screen name="Admin" component={Admin}/>
 
         {/* Start Users Entrance */}
-          <Drawer.Screen name="SectionGuest" component={SectionGuest}/>
-          <Drawer.Screen name="SectionAdmin" component={SectionAdmin}/>
+          <Stack.Screen name="SectionGuest" component={SectionGuest}/>
+          <Stack.Screen name="SectionAdmin" component={SectionAdmin}/>
         {/* End Users Entrance */}
+
+        <Stack.Screen name="AdminTasks" component={AdminTasks} />
         
-        <Drawer.Screen name="AllTasks" component={AllTasks} />
-        <Drawer.Screen name="InProgress" component={InProgress} />
-        <Drawer.Screen name="Finished" component={Finished} />
+        
+        <Stack.Screen name="AllTasks" component={AllTasks} />
+        <Stack.Screen name="InProgress" component={InProgress} />
+        <Stack.Screen name="Finished" component={Finished} />
         {/* Add more screens to the drawer here if needed */}
-      </Drawer.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
