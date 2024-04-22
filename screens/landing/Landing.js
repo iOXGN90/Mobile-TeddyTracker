@@ -22,7 +22,6 @@ const Admin = () => {
         password: password,
       });
 
-      const accessToken = response.data.data.token
       // Handle successful login, e.g., save token to AsyncStorage
       console.log('Login successfully!');
       // Navigation.navigate('SectionAdmin')
@@ -31,7 +30,7 @@ const Admin = () => {
         adminName : response.data.data.name,
         adminToken : response.data.data.token
       }
-      // console.log(adminData);
+      console.log(adminData);
 
       Navigation.navigate('SectionAdmin', {adminData : adminData})
     } catch (error) {

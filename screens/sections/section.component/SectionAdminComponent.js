@@ -8,11 +8,11 @@ const SectionGuestComponent = ({sectionInfo}) => {
     const windowWidth = Dimensions.get('window').width;
   
     const handlePressSample = () => {
-      console.log(sectionInfo.section_id);
+      console.log("Section ID: " + sectionInfo.section_id);
     };
   
     return (
-        <TouchableOpacity style={styles.sectionContainer} onPress={handlePressSample}>
+      <TouchableOpacity style={styles.sectionContainer} onPress={handlePressSample}>
         <View style={{
           display: 'flex',
           flexDirection: 'row',
@@ -27,7 +27,7 @@ const SectionGuestComponent = ({sectionInfo}) => {
         </View>
       </TouchableOpacity>
     );
-  };
+};
   
   const styles = StyleSheet.create({
     body:{
@@ -38,19 +38,11 @@ const SectionGuestComponent = ({sectionInfo}) => {
         width: "90%",
         backgroundColor: 'white',
         borderRadius: 15,
-        borderRightWidth: 1,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        borderRightColor: '#ccc',
-        borderTopColor: '#ccc',
-        borderBottomColor: '#ccc',
         padding: 20,
-        // marginTop: -10,
         borderLeftWidth: 10,
         borderLeftColor: '#00A3FF',
         elevation: 10,
         alignSelf: 'center',
-        marginHorizontal: 'auto',
       },
       sectionName: {
         marginHorizontal: 10,
