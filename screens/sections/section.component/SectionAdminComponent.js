@@ -17,8 +17,8 @@ const SectionGuestComponent = ({ sectionInfo }) => {
 
     // Show alert indicating that pin_password has been copied to clipboard
     Alert.alert(
-      'Password Copied',
-      'The PIN has been copied to clipboard, share it your classmate/student.',
+      'Copied to Clipboard',
+      'The PIN has been copied to clipboard.',
       [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
       { cancelable: true }
     );
