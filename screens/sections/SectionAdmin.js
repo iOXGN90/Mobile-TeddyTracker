@@ -193,7 +193,6 @@ const SectionAdmin = () => {
         </Text>
 
         <View style={styles.buttonsContainer}>
-          
           <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
             <Image source={require('../../assets/Images/utilities/add.png')} style={styles.addButtonIcon} />
           </TouchableOpacity>

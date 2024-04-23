@@ -37,7 +37,7 @@ const SectionGuest = () => {
         const response = await axios.post('http://192.168.1.6:3000/api/leave-section');
         console.log(response.data); // Assuming you want to log the response
         // Handle success, if needed
-        Navigation.navigate('Landing');
+        Navigation.navigate('Guest');
     } catch (error) {
         console.error('Error leaving section:', error);
         // Handle error, if needed

@@ -5,16 +5,17 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import Modal from 'react-native-modal';
-import { DateTimePicker } from 'expo-datetime-picker';
+// import { DateTimePicker } from 'expo-datetime-picker';
+import { Dimensions } from 'react-native';
 
+const Width = Dimensions.get('window').width;
+const Height = Dimensions.get('window').height;
 import Tasks from './task.component/Task';
 
 const AdminTasks = () => {
     const route = useRoute();
     const Navigation = useNavigation();
 
-    const [date, setDate] = useState(null);
-    const [mode, setMode] = useState('date');
     // Extract sectionInfo from route params
     const fromSectionData = route.params?.sectionInfo;
     const sectionDataID = fromSectionData.section_id;
@@ -25,6 +26,11 @@ const AdminTasks = () => {
     const [task_instruction, setTask_instruction] = useState('');
     const [task_title, setTask_title] = useState('');
     const [task_deadline, setTask_deadline] = useState('');
+
+    const [day, setDay] = useState('');
+    const [month, setMonth] = useState('');
+    const [year, setYear] = useState('');
+
 
     const handleToggleModal = () => {
         setModalVisible(!modalVisible);
@@ -89,6 +95,48 @@ const AdminTasks = () => {
         Navigation.goBack();
     }
 
+    const handleAddTask = async () => {
+        try {
+            // Create a data object with the values from the text inputs
+            const postData = {
+                admin_id: fromSectionData.admin_id,
+                section_id: fromSectionData.section_id,
+                subject: subject,
+                type_of_task: type_of_task,
+                task_instruction: task_instruction,
+                task_title: task_title,
+                task_deadline: `${year}-${month}-${day}`, // Combine year, month, and day to form the date string
+            };
+    
+            // Make a POST request to your API endpoint
+            const response = await axios.post('http://192.168.1.6:3000/api/create-task', postData);
+    
+            // Log the response from the server
+            console.log('Post Response:', response.data);
+    
+            // Close the modal
+            setModalVisible(false);
+    
+            // Clear the input fields
+            setSubject('');
+            setType_of_task('Assignment');
+            setTask_instruction('');
+            setTask_title('');
+            setTask_deadline('');
+            setDay('');
+            setMonth('');
+            setYear('');
+    
+            // Refresh the task data to display the new task
+            getTasks();
+    
+        } catch (error) {
+            // Handle errors
+            console.error('Post Error:', error);
+        }
+    };
+    
+
     return (
         <SafeAreaView style={{
             padding: 15,
@@ -128,12 +176,13 @@ const AdminTasks = () => {
                 </View>
             </ScrollView>
             <Modal
-                animationIn='slideInDown'
+                animationIn='slideInUp'
+                animationOut='slideOutDown'
                 transparent={true}
                 isVisible={modalVisible}
                 onRequestClose={() => setModalVisible(!modalVisible)}
             >
-                <View style={styles.centeredView}>
+                <ScrollView style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.Header}>Subject</Text>
                         <TextInput
@@ -168,28 +217,71 @@ const AdminTasks = () => {
                             onChangeText={setTask_instruction}
                             textAlignVertical='top'
                             multiline={true}
-                            numberOfLines={10}
+                            numberOfLines={5}
                             value={task_instruction}
                             placeholder="Enter text here"
                             keyboardType="default"
                         />
-                        <Text style={styles.DeadlineText}>Deadline:</Text>
-                            <Button title="Pick Date" onPress={() => setMode('date')} />
-                            {mode && (
-                            <DateTimePicker
-                                testID="dateTimePicker"
-                                value={date}
-                                mode={mode}
-                                display="default" // Can be "clock", "spinner", or "default"
-                                onChange={onChange}
-                            />
-                            )}
+                        <Text style={styles.Header}>Deadline:</Text>
+                            <View style={{
+                                display:'flex',
+                                flexDirection:'row',
+                                justifyContent:'center'
+                                // backgroundColor:'blue',
+                                
+                            }}>
+                                <TextInput
+                                    style={{
+                                        fontSize: 20,
+                                        width: 50,
+                                        textAlign:'center',
+                                        backgroundColor: 'grey',
+                                        color:'white',
+                                        borderRadius: 40,      
+                                    }}
+                                    onChangeText={setMonth}
+                                    value={month}
+                                    placeholder='MM'
+                                    keyboardType='numeric'
+                                />
+                                <TextInput
+                                    style={{
+                                        fontSize: 20,
+                                        width: 50,
+                                        textAlign:'center',
+                                        backgroundColor: 'grey',
+                                        color:'white',
+                                        marginLeft: 15,
+                                        borderRadius: 40,   
+                                    }}
+                                    onChangeText={setDay}
+                                    value={day}
+                                    placeholder='DD'
+                                    keyboardType='numeric'
+                                />
+                                <TextInput
+                                    style={{
+                                        fontSize: 20,
+                                        width: 100,
+                                        textAlign:'center',
+                                        backgroundColor: 'grey',
+                                        marginLeft: 15,
+                                        color:'white',
+                                        borderRadius: 40,   
+                                    }}
+                                    onChangeText={setYear}
+                                    value={year}
+                                    placeholder='YYYY'
+                                    keyboardType='numeric'
+                                />
+                            </View>
                         <View style={{
                             display:'flex',
                             flexDirection:'row-reverse',
-                            alignItems:'center'
+                            alignItems:'center',
+                            justifyContent:'center',
                         }}>
-                            <TouchableOpacity style={styles.closeButton} onPress={handleTest}>
+                            <TouchableOpacity style={styles.closeButton} onPress={handleAddTask}>
                                 <Text style={styles.buttonText}>Submit</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.closeButton} onPress={cancelButton}>
@@ -197,7 +289,7 @@ const AdminTasks = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </View>
+                </ScrollView>
             </Modal>
         </SafeAreaView>
     );
@@ -216,25 +308,24 @@ const styles = StyleSheet.create({
         justifyContent:'space-between',
     },
     centeredView:{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        // backgroundColor: 'rgba(0,0,0,0.3)',
+        // flex: 1,
+        top: Height * 0.05
       },
       modalView: {
-        height: '100%',
+        // height: '100%',
         width: '100%',
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
-        alignItems: 'center',
+        // bottom: -100
+        // alignItems: 'center',
       },
       inputTitle:{
         width: '100%',
         borderWidth: 0.5,
         borderRadius: 10,
         fontSize: 18,
-        paddingVertical: 5,
+        paddingVertical: 30,
         paddingHorizontal: 10,
         marginBottom: 10,
       },
@@ -256,13 +347,17 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
       },
       closeButton: {
+
         backgroundColor: '#55bCF6',
         padding: 15,
-        borderRadius: 10,
-        marginTop: 10,
+        width: '50%',
+        borderRadius: 30,
+        marginTop: 30,
         margin: 10,
+        elevation: 5
       },
       buttonText: {
+        textAlign: 'center',
         fontSize: 25,
         fontWeight: 'bold',
         color: 'white'

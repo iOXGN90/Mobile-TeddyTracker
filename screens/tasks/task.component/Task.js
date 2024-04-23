@@ -2,9 +2,17 @@ import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const Tasks = ({taskData}) => {
+const Tasks = ({ taskData }) => {
   const navigation = useNavigation();
   const windowWidth = Dimensions.get('window').width;
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}-${year}`;
+  };
 
   const handlePressSample = () => {
     console.log(taskData);
@@ -19,6 +27,10 @@ const Tasks = ({taskData}) => {
         <Text style={styles.taskDescription}>{taskData.type_of_task}</Text>
         <Text style={styles.taskTitle}>Status:</Text>
         <Text style={styles.taskDescription}>{taskData.status}</Text>
+        <Text style={styles.taskTitle}>Deadline:</Text>
+        <Text style={styles.taskDescription}>{formatDate(taskData.task_deadline)}</Text>
+        <Text style={styles.taskTitle}>Instruction:</Text>
+        <Text style={styles.taskDescription}> {taskData.task_instruction} </Text>
       </View>
     </TouchableOpacity>
   );
