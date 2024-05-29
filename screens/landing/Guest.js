@@ -18,7 +18,7 @@ const Guest = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://192.168.1.6:3000/api/login-section', {
+            const response = await axios.post('http://192.168.1.12:3000/api/login-section', {
                 pin_password: pin_password,
             });
             // Handle successful login, e.g., save token to AsyncStorage
@@ -91,7 +91,7 @@ return (
                     placeholder="Section Password"
                     onChangeText={setPin_password}
                     value={pin_password}
-                    secureTextEntry
+                    // secureTextEntry
                 />
                 <TouchableOpacity style={styles.inputButton} onPress={handleLogin}>
                     <Text style={styles.Btn}>Enter as Guest</Text>

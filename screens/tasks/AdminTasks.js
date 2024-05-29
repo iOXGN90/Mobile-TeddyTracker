@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView, RefreshControl, TextInput  } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView, RefreshControl, TextInput, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import Modal from 'react-native-modal';
-// import { DateTimePicker } from 'expo-datetime-picker';
 import { Dimensions } from 'react-native';
+import Tasks from './task.component/Task';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Width = Dimensions.get('window').width;
 const Height = Dimensions.get('window').height;
-import Tasks from './task.component/Task';
 
 const AdminTasks = () => {
     const route = useRoute();
-    const Navigation = useNavigation();
+    const navigation = useNavigation();
 
     // Extract sectionInfo from route params
     const fromSectionData = route.params?.sectionInfo;
@@ -25,30 +25,16 @@ const AdminTasks = () => {
     const [type_of_task, setType_of_task] = useState('Assignment');
     const [task_instruction, setTask_instruction] = useState('');
     const [task_title, setTask_title] = useState('');
-    const [task_deadline, setTask_deadline] = useState('');
-
-    const [day, setDay] = useState('');
-    const [month, setMonth] = useState('');
-    const [year, setYear] = useState('');
-
+    const [task_deadline, setTask_deadline] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
     const handleToggleModal = () => {
         setModalVisible(!modalVisible);
     }
 
-    const handleTest = () => {
-        console.log(taskData);
-    };
-
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setDate(currentDate);
-        setMode(null); // Close the picker after selection
-      };
-    const cancelButton = () =>{
-        setModalVisible(!modalVisible);
-        setSubject('');
-    }
+    // const handleTest = () => {
+    //     console.log(taskData);
+    // };
 
     // State to hold fetched user data
     const [taskData, setTaskData] = useState([]);
@@ -63,7 +49,7 @@ const AdminTasks = () => {
             setIsFetching(true);
 
             // Make GET request
-            const response = await axios.get(`http://192.168.1.6:3000/api/tasks/${sectionDataID}`);
+            const response = await axios.get(`http://192.168.1.12:3000/api/tasks/${sectionDataID}`);
 
             // Handle successful response
             console.log('Response:', response.data);
@@ -92,87 +78,69 @@ const AdminTasks = () => {
     };
 
     const handleSection = () => {
-        Navigation.goBack();
+        navigation.goBack();
     }
 
     const handleAddTask = async () => {
         try {
-            // Create a data object with the values from the text inputs
-            const postData = {
+            // Make a POST request to your API endpoint
+            const response = await axios.post('http://192.168.1.12:3000/api/create-task', {
                 admin_id: fromSectionData.admin_id,
                 section_id: fromSectionData.section_id,
                 subject: subject,
                 type_of_task: type_of_task,
                 task_instruction: task_instruction,
                 task_title: task_title,
-                task_deadline: `${year}-${month}-${day}`, // Combine year, month, and day to form the date string
-            };
-    
-            // Make a POST request to your API endpoint
-            const response = await axios.post('http://192.168.1.6:3000/api/create-task', postData);
-    
+                task_deadline: task_deadline.toISOString().substring(0, 10)
+
+            });
+
             // Log the response from the server
-            console.log('Post Response:', response.data);
-    
+            // console.log('Post Response:', response.data);
+
             // Close the modal
             setModalVisible(false);
-    
+
             // Clear the input fields
             setSubject('');
             setType_of_task('Assignment');
             setTask_instruction('');
             setTask_title('');
-            setTask_deadline('');
-            setDay('');
-            setMonth('');
-            setYear('');
-    
+            setTask_deadline(new Date());
+
             // Refresh the task data to display the new task
             getTasks();
-    
+
         } catch (error) {
             // Handle errors
             console.error('Post Error:', error);
         }
     };
-    
 
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || task_deadline;
+        setShowDatePicker(Platform.OS === 'ios'); // On iOS, always show date picker
+        setTask_deadline(currentDate);
+    };
+    
     return (
-        <SafeAreaView style={{
-            padding: 15,
-        }}>
+        <SafeAreaView style={{ padding: 15 }}>
+            <View  iew style={styles.navigation}>
+                <TouchableOpacity onPress={handleSection}>
+                    <Image source={require('../../assets/Images/utilities/arrow.png')} style={{ width: 30, height: 30 }} />
+                </TouchableOpacity>
+                <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Tasks</Text>
+                <TouchableOpacity onPress={handleToggleModal}>
+                    <Image source={require('../../assets/Images/utilities/add.png')} style={{ width: 30, height: 30 }} />
+                </TouchableOpacity>
+            </View>
             <ScrollView
                 refreshControl={<RefreshControl refreshing={isFetching} onRefresh={onRefresh} />}
             >
-                <View style={styles.navigation}>
-                    <TouchableOpacity onPress={handleSection}>
-                        <Image source={require('../../assets/Images/utilities/arrow.png')}
-                            style={{
-                                width: 30,
-                                height: 30,
-                            }} />
-                    </TouchableOpacity>
-                    <Text style={{
-                        fontSize: 30,
-                        fontWeight:'bold'
-                    }}>
-                        Tasks
-                    </Text>
-                    <TouchableOpacity onPress={handleToggleModal}>
-                        <Image source={require('../../assets/Images/utilities/add.png')} 
-                        style={{
-                            width: 30,
-                            height: 30,
-                        }} />
-                    </TouchableOpacity>
-                    
-                </View>
                 <View style={{ marginVertical: 30 }}>
-                    {taskData.map((item, index) => (
-                        <View style={styles.item} key={index}>
-                            <Tasks taskData={item} />
-                        </View>
-                    ))}
+
+                    <Tasks taskData={taskData.data}/>  
+
                 </View>
             </ScrollView>
             <Modal
@@ -223,68 +191,34 @@ const AdminTasks = () => {
                             keyboardType="default"
                         />
                         <Text style={styles.Header}>Deadline:</Text>
-                            <View style={{
-                                display:'flex',
-                                flexDirection:'row',
-                                justifyContent:'center'
-                                // backgroundColor:'blue',
+                        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+                            <Text style={styles.dateButtonText}>Pick a Date</Text>
+                        </TouchableOpacity>
+                        {showDatePicker && (
+                            <DateTimePicker
+                                value={task_deadline}
+                                mode="date"
+                                display="default"
+                                onChange={onChangeDate}
+                            />
+                        )}
+                        <Text 
+                            style={{
                                 
-                            }}>
-                                <TextInput
-                                    style={{
-                                        fontSize: 20,
-                                        width: 50,
-                                        textAlign:'center',
-                                        backgroundColor: 'grey',
-                                        color:'white',
-                                        borderRadius: 40,      
-                                    }}
-                                    onChangeText={setMonth}
-                                    value={month}
-                                    placeholder='MM'
-                                    keyboardType='numeric'
-                                />
-                                <TextInput
-                                    style={{
-                                        fontSize: 20,
-                                        width: 50,
-                                        textAlign:'center',
-                                        backgroundColor: 'grey',
-                                        color:'white',
-                                        marginLeft: 15,
-                                        borderRadius: 40,   
-                                    }}
-                                    onChangeText={setDay}
-                                    value={day}
-                                    placeholder='DD'
-                                    keyboardType='numeric'
-                                />
-                                <TextInput
-                                    style={{
-                                        fontSize: 20,
-                                        width: 100,
-                                        textAlign:'center',
-                                        backgroundColor: 'grey',
-                                        marginLeft: 15,
-                                        color:'white',
-                                        borderRadius: 40,   
-                                    }}
-                                    onChangeText={setYear}
-                                    value={year}
-                                    placeholder='YYYY'
-                                    keyboardType='numeric'
-                                />
-                            </View>
+                            }}
+                        >
+                            {task_deadline.toLocaleDateString()}
+                        </Text>
                         <View style={{
-                            display:'flex',
-                            flexDirection:'row-reverse',
-                            alignItems:'center',
-                            justifyContent:'center',
+                            display: 'flex',
+                            flexDirection: 'row-reverse',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                         }}>
                             <TouchableOpacity style={styles.closeButton} onPress={handleAddTask}>
                                 <Text style={styles.buttonText}>Submit</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.closeButton} onPress={cancelButton}>
+                            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
                                 <Text style={styles.buttonText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
@@ -296,48 +230,39 @@ const AdminTasks = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    navigation:{
-        display:'flex',
+    navigation: {
+        display: 'flex',
         flexDirection: 'row',
-        alignItems:'center',
-        justifyContent:'space-between',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
-    centeredView:{
-        // flex: 1,
+    centeredView: {
         top: Height * 0.05
-      },
-      modalView: {
-        // height: '100%',
+    },
+    modalView: {
         width: '100%',
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
-        // bottom: -100
-        // alignItems: 'center',
-      },
-      inputTitle:{
+    },
+    inputTitle: {
         width: '100%',
         borderWidth: 0.5,
         borderRadius: 10,
         fontSize: 18,
-        paddingVertical: 30,
+        paddingVertical: 10,
         paddingHorizontal: 10,
         marginBottom: 10,
-      },
-      pickerStyle: {
+    },
+    pickerStyle: {
         width: '100%',
         borderWidth: 0.5,
         borderRadius: 10,
         paddingVertical: 5,
         paddingHorizontal: 10,
         marginBottom: 10,
-      },
-      inputDescription:{
+    },
+    inputDescription: {
         width: '100%',
         borderWidth: 0.5,
         borderRadius: 10,
@@ -345,9 +270,8 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         textAlignVertical: 'top',
-      },
-      closeButton: {
-
+    },
+    closeButton: {
         backgroundColor: '#55bCF6',
         padding: 15,
         width: '50%',
@@ -355,18 +279,28 @@ const styles = StyleSheet.create({
         marginTop: 30,
         margin: 10,
         elevation: 5
-      },
-      buttonText: {
+    },
+    buttonText: {
         textAlign: 'center',
         fontSize: 25,
         fontWeight: 'bold',
         color: 'white'
-      },
-      Header:{
+    },
+    Header: {
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 5,
-      },
+    },
+    dateButton: {
+        backgroundColor: '#88B5E9',
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 10,
+    },
+    dateButtonText: {
+        color: 'white',
+        textAlign: 'center',
+    },
 });
 
 export default AdminTasks;

@@ -19,7 +19,7 @@ const Admin = () => {
   const handleLogin = async () => {
     try {
       setLoading(true); // Set loading state to true when login process starts
-      const response = await axios.post('http://192.168.1.6:3000/api/login', {
+      const response = await axios.post('http://192.168.1.12:3000/api/login', {
         username: username,
         password: password,
       });
@@ -101,7 +101,6 @@ const Admin = () => {
           </TouchableOpacity>
         </View>
       </View>
-
     </SafeAreaView>
   );
 };

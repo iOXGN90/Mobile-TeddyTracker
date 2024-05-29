@@ -14,7 +14,6 @@ import SectionAdmin from './screens/sections/SectionAdmin';
 
 import AdminTasks from './screens/tasks/AdminTasks';
 
-
 const Stack = createNativeStackNavigator();
 
 

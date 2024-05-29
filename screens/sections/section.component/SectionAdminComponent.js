@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   sectionDescription: {
     fontSize: 18,
-  },
+  }
 });
 
 export default SectionGuestComponent;

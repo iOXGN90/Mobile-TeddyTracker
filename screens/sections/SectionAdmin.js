@@ -36,7 +36,7 @@ const SectionAdmin = () => {
     try {
       setIsFetching(true); // Set fetching state to true
       // Make POST request to add a new section
-      const response = await axios.post('http://192.168.1.6:3000/api/create-section', {
+      const response = await axios.post('http://192.168.1.12:3000/api/create-section', {
         admin_id: adminID,
         section_name: createSection
       });
@@ -59,7 +59,7 @@ const SectionAdmin = () => {
   const fetchSectionData = useCallback(async () => {
     try {
       // Make a GET request using Axios
-      const response = await axios.get(`http://192.168.1.6:3000/api/section/${adminID}`);
+      const response = await axios.get(`http://192.168.1.12:3000/api/section/${adminID}`);
       // Assuming the response data is an object with section data
       setSectionInfo(response.data);
     } catch (error) {
@@ -89,8 +89,8 @@ const SectionAdmin = () => {
           {
             text: 'Yes',
             onPress: async () => {
-              const API_ENDPOINT = 'http://192.168.1.6:3000/api/logout';
-              console.log('Token Deleted: ' + token);
+              const API_ENDPOINT = 'http://192.168.1.12:3000/api/logout';
+              console.log('Log out successfully');
               const response = await axios.post(
                 API_ENDPOINT,
                 {},
@@ -146,8 +146,8 @@ const SectionAdmin = () => {
           isVisible={isSidebarOpen}
           animationIn="slideInLeft"
           animationOut="slideOutLeft"
-          backdropTransitionInTiming={300}
-          backdropTransitionOutTiming={100}
+          backdropTransitionInTiming={10000}
+          backdropTransitionOutTiming={500}
           backdropOpacity={0.2}
           transparent={true}
           onRequestClose={() => setIsSidebarOpen(false)}
