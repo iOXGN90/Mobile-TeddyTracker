@@ -13,6 +13,7 @@ const SectionGuest = () => {
   const [sectionInfo, setSectionInfo] = useState([]); // State to hold section data
   const [taskInfo, setTaskInfo] = useState([]);
   const [refreshing, setRefreshing] = useState(false); // State to manage refreshing
+  const host = '192.168.1.7:3000'
 
   useEffect(() => {
     // Fetch section and task data when the component mounts
@@ -22,7 +23,7 @@ const SectionGuest = () => {
 
   const fetchSectionData = async () => {
     try {
-      const response = await axios.get(`http://192.168.1.12:3000/api/section/${sectionID}`);
+      const response = await axios.get(`http://${host}/api/section/${sectionID}`);
       setSectionInfo(response.data);
     } catch (error) {
       console.error('Error fetching section data:', error);
@@ -31,7 +32,7 @@ const SectionGuest = () => {
 
   const leaveSection = async () => {
     try {
-      const response = await axios.post('http://192.168.1.12:3000/api/leave-section');
+      const response = await axios.post(`http://${host}/api/section/${sectionID}`);
       console.log(response.data);
       Navigation.navigate('Guest');
     } catch (error) {
@@ -41,7 +42,7 @@ const SectionGuest = () => {
 
   const fetchTaskData = async () => {
     try {
-      const response = await axios.get(`http://192.168.1.12:3000/api/tasks/${sectionID}`);
+      const response = await axios.get(`http://${host}/api/section/${sectionID}`);
       setTaskInfo(response.data);
       console.log(taskInfo);
     } catch (error) {

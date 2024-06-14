@@ -11,6 +11,8 @@ const { width, height } = Dimensions.get('window');
 const Guest = () => {
     const [pin_password, setPin_password] = useState('');
     const Navigation = useNavigation();
+    const host = '192.168.1.7:3000'
+
 
     const handleGoBack = () =>{
         Navigation.navigate('Admin');
@@ -18,7 +20,7 @@ const Guest = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://192.168.1.12:3000/api/login-section', {
+            const response = await axios.post(`http://${host}/api/login-section`, {
                 pin_password: pin_password,
             });
             // Handle successful login, e.g., save token to AsyncStorage
